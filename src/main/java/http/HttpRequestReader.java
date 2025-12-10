@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class HttpRequestReader {
 
@@ -15,7 +17,8 @@ public class HttpRequestReader {
 
   public HttpRequest readRequest()  throws IOException {
     RequestLine requestLine = parseRequestLine();
-    return new HttpRequest(requestLine.method(), requestLine.path(), requestLine.version());
+    Map<String, String> headers = parseHeaders();
+    return new HttpRequest(requestLine.method(), requestLine.path(), requestLine.version(), headers);
   }
 
   private RequestLine parseRequestLine() throws IOException {
@@ -26,6 +29,16 @@ public class HttpRequestReader {
         .path(requestLineSplit[1])
         .version(requestLineSplit[2])
         .build();
+  }
+
+  private Map<String, String> parseHeaders() throws IOException {
+    String headerLine;
+    Map<String, String> headers = new LinkedHashMap<>();
+    while (!(headerLine = readAsciiLine().trim()).isBlank()) {
+      String[] splitLine = headerLine.split(": ", 2);
+      headers.put(splitLine[0], splitLine[1]);
+    }
+    return headers;
   }
 
   private String readAsciiLine() throws IOException {
