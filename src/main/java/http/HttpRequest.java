@@ -1,0 +1,4 @@
+package http;
+
+public record HttpRequest(HttpMethod method, String path, String version) {
+}
