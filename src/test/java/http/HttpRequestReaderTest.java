@@ -2,6 +2,8 @@ package http;
 
 import static org.assertj.core.api.Assertions.*;
 
+import http.reader.HttpLineReader;
+import http.reader.LineReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,8 +14,8 @@ class HttpRequestReaderTest {
 
   private static HttpRequest getHttpRequest(byte[] bytes) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-
-    HttpRequestReader httpRequestReader = new HttpRequestReader(byteArrayInputStream);
+    LineReader reader = new HttpLineReader(byteArrayInputStream);
+    HttpRequestReader httpRequestReader = new HttpRequestReader(reader);
     return httpRequestReader.readRequest();
   }
 
