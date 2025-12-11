@@ -1,4 +1,5 @@
 import http.HttpRequestReader;
+import http.parsers.RequestLineParser;
 import http.reader.HttpLineReader;
 import http.reader.LineReader;
 import java.io.IOException;
@@ -14,9 +15,10 @@ public class ToyHttpServer {
     try (ServerSocket server = new ServerSocket(8080, 5, InetAddress.getByName("localhost"))) {
       Socket accept = server.accept();
       LineReader reader = new HttpLineReader(accept.getInputStream());
-      HttpRequestReader httpRequestReader = new HttpRequestReader(reader);
+      HttpRequestReader httpRequestReader = new HttpRequestReader(reader, new RequestLineParser());
       OutputStream outputStream = accept.getOutputStream();
-      outputStream.write("HTTP/1.1 200 OK\r\nConnection: Close\r\n\r\n".getBytes(StandardCharsets.UTF_8));
+      outputStream.write(
+          "HTTP/1.1 200 OK\r\nConnection: Close\r\n\r\n".getBytes(StandardCharsets.UTF_8));
     }
   }
 }

@@ -1,31 +1,25 @@
 package http;
 
+import http.parsers.RequestLineParser;
 import http.reader.LineReader;
 import java.io.IOException;
 
 public class HttpRequestReader {
 
   private final LineReader reader;
+  private final RequestLineParser requestLineParser;
 
-  public HttpRequestReader(LineReader reader) {
+  public HttpRequestReader(LineReader reader, RequestLineParser requestLineParser) {
     this.reader = reader;
+    this.requestLineParser = requestLineParser;
   }
 
   public HttpRequest readRequest() throws IOException {
-    RequestLine requestLine = parseRequestLine();
+    String requestLineString = reader.readLine().trim();
+    RequestLine requestLine = requestLineParser.parse(requestLineString);
     HttpHeaders headers = parseHeaders();
     return new HttpRequest(
         requestLine.method(), requestLine.path(), requestLine.version(), headers);
-  }
-
-  private RequestLine parseRequestLine() throws IOException {
-    String requestLineString = reader.readLine().trim();
-    String[] requestLineSplit = requestLineString.split(" ");
-    return RequestLine.newBuilder()
-        .method(requestLineSplit[0])
-        .path(requestLineSplit[1])
-        .version(requestLineSplit[2])
-        .build();
   }
 
   private HttpHeaders parseHeaders() throws IOException {

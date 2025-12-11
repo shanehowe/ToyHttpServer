@@ -2,6 +2,7 @@ package http;
 
 import static org.assertj.core.api.Assertions.*;
 
+import http.parsers.RequestLineParser;
 import http.reader.HttpLineReader;
 import http.reader.LineReader;
 import java.io.ByteArrayInputStream;
@@ -15,7 +16,7 @@ class HttpRequestReaderTest {
   private static HttpRequest getHttpRequest(byte[] bytes) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
     LineReader reader = new HttpLineReader(byteArrayInputStream);
-    HttpRequestReader httpRequestReader = new HttpRequestReader(reader);
+    HttpRequestReader httpRequestReader = new HttpRequestReader(reader, new RequestLineParser());
     return httpRequestReader.readRequest();
   }
 
