@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class HttpRequestReader {
 
@@ -15,10 +13,11 @@ public class HttpRequestReader {
     this.stream = stream;
   }
 
-  public HttpRequest readRequest()  throws IOException {
+  public HttpRequest readRequest() throws IOException {
     RequestLine requestLine = parseRequestLine();
     HttpHeaders headers = parseHeaders();
-    return new HttpRequest(requestLine.method(), requestLine.path(), requestLine.version(), headers);
+    return new HttpRequest(
+        requestLine.method(), requestLine.path(), requestLine.version(), headers);
   }
 
   private RequestLine parseRequestLine() throws IOException {
