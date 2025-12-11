@@ -17,7 +17,7 @@ public class HttpRequestReader {
 
   public HttpRequest readRequest()  throws IOException {
     RequestLine requestLine = parseRequestLine();
-    Map<String, String> headers = parseHeaders();
+    HttpHeaders headers = parseHeaders();
     return new HttpRequest(requestLine.method(), requestLine.path(), requestLine.version(), headers);
   }
 
@@ -31,12 +31,12 @@ public class HttpRequestReader {
         .build();
   }
 
-  private Map<String, String> parseHeaders() throws IOException {
+  private HttpHeaders parseHeaders() throws IOException {
     String headerLine;
-    Map<String, String> headers = new LinkedHashMap<>();
+    HttpHeaders headers = new HttpHeaders();
     while (!(headerLine = readAsciiLine().trim()).isBlank()) {
       String[] splitLine = headerLine.split(": ", 2);
-      headers.put(splitLine[0], splitLine[1]);
+      headers.add(splitLine[0], splitLine[1]);
     }
     return headers;
   }
