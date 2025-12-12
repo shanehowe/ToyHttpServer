@@ -1,6 +1,6 @@
 package http.parsers;
 
-import http.HttpRequestReader.RequestLine;
+import http.RequestLine;
 
 public class RequestLineParser {
 
