@@ -6,8 +6,4 @@ public enum HttpMethod {
   PUT,
   POST,
   DELETE;
-
-  public static HttpMethod caseInsensitiveValueOf(String s) {
-    return HttpMethod.valueOf(s.toUpperCase());
-  }
 }

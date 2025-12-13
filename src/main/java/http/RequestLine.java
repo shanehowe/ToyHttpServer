@@ -12,7 +12,7 @@ package http;
       private String version;
 
       public Builder method(String method) {
-        this.method = HttpMethod.caseInsensitiveValueOf(method);
+        this.method = HttpMethod.valueOf(method.toUpperCase());
         return this;
       }
 
