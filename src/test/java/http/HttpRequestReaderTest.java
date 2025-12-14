@@ -2,6 +2,9 @@ package http;
 
 import static org.assertj.core.api.Assertions.*;
 
+import http.model.HttpHeaders;
+import http.model.HttpMethod;
+import http.model.HttpRequest;
 import http.parsers.HeaderParser;
 import http.parsers.RequestLineParser;
 import http.reader.HttpLineReader;

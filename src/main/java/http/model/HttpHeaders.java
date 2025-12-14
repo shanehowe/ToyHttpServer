@@ -1,4 +1,4 @@
-package http;
+package http.model;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package http.parsers;
 
-import http.HttpHeaders;
+import http.model.HttpHeaders;
 import http.reader.LineReader;
 import java.io.IOException;
 

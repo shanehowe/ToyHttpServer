@@ -1,4 +1,4 @@
-package http;
+package http.model;
 
 public record RequestLine(HttpMethod method, String path, String version) {
 

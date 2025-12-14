@@ -1,5 +1,8 @@
 package http;
 
+import http.model.HttpHeaders;
+import http.model.HttpRequest;
+import http.model.RequestLine;
 import http.parsers.HeaderParser;
 import http.parsers.RequestLineParser;
 import http.reader.LineReader;

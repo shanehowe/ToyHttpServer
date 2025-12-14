@@ -1,6 +1,6 @@
 package http.parsers;
 
-import http.RequestLine;
+import http.model.RequestLine;
 
 public class RequestLineParser {
 
