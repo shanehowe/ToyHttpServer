@@ -17,9 +17,9 @@ class HttpRequestReaderTest {
   private static HttpRequest getHttpRequest(byte[] bytes) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
     LineReader reader = new HttpLineReader(byteArrayInputStream);
-    HttpRequestReader httpRequestReader =
-        new HttpRequestReader(reader, new RequestLineParser(), new HeaderParser());
-    return httpRequestReader.readRequest();
+    HttpRequestParser httpRequestReader =
+        new HttpRequestParser(reader, new RequestLineParser(), new HeaderParser());
+    return httpRequestReader.parseRequest();
   }
 
   @Test
