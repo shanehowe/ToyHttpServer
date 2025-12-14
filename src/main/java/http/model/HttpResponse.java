@@ -2,6 +2,10 @@ package http.model;
 
 public record HttpResponse(HttpStatusCode statusCode, HttpHeaders headers, String body) {
 
+  public static Builder newBuilder() {
+    return new Builder();
+  }
+
   public static class Builder {
     private HttpStatusCode statusCode;
     private HttpHeaders headers = new HttpHeaders();

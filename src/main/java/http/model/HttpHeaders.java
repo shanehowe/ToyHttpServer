@@ -19,6 +19,10 @@ public class HttpHeaders {
     headers.put(normalize(key), value);
   }
 
+  public String get(String key) {
+    return headers.get(normalize(key));
+  }
+
   private String normalize(String key) {
     return Objects.requireNonNull(key).toLowerCase();
   }
