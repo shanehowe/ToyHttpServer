@@ -2,7 +2,9 @@ package http.model;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 
 public class HttpHeaders {
   private final Map<String, String> headers;
@@ -21,6 +23,10 @@ public class HttpHeaders {
 
   public String get(String key) {
     return headers.get(normalize(key));
+  }
+
+  public Set<Entry<String, String>> entrySet() {
+    return headers.entrySet();
   }
 
   private String normalize(String key) {

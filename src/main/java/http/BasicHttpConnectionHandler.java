@@ -3,6 +3,7 @@ package http;
 import http.model.HttpRequest;
 import http.model.HttpResponse;
 import http.router.HttpRouter;
+import http.writer.HttpResponseWriter;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -20,11 +21,16 @@ public class BasicHttpConnectionHandler implements ConnectionHandler {
     boolean keepAlive;
     try {
       HttpRequestParser requestParser = parserProvider.provide(connection);
+      HttpResponseWriter httpResponseWriter = new HttpResponseWriter(connection.getOutputStream());
       do {
         HttpRequest request = requestParser.parseRequest();
 
         Handler handler = router.route(request.path());
         HttpResponse response = handler.handle(request);
+        response.headers().add("Connection", keepAlive(request) ? "keep-alive" : "close");
+        response.headers().add("Content-Length", String.valueOf(response.body().length()));
+
+        httpResponseWriter.writeResponse(response);
 
         keepAlive = keepAlive(request);
       } while (keepAlive);
