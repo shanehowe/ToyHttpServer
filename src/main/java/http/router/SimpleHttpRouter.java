@@ -1,7 +1,6 @@
 package http.router;
 
 import http.Handler;
-import http.model.HttpResponse;
 import http.model.HttpStatusCode;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +19,7 @@ public class SimpleHttpRouter implements HttpRouter {
   @Override
   public Handler route(String path) {
     return routes.getOrDefault(
-        path, request -> HttpResponse.newBuilder().statusCode(HttpStatusCode.NOT_FOUND).build());
+        path, (request, response) -> response.setStatusCode(HttpStatusCode.NOT_FOUND));
   }
 
   public SimpleHttpRouter addRoute(String path, Handler handler) {

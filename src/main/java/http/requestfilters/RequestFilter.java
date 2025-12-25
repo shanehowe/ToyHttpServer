@@ -5,5 +5,5 @@ import http.model.HttpResponse;
 
 public interface RequestFilter {
 
-  void filter(HttpRequest request, HttpResponse response);
+  void filter(HttpRequest request, HttpResponse response, FilterChain filterChain);
 }

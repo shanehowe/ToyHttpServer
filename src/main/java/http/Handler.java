@@ -5,5 +5,5 @@ import http.model.HttpResponse;
 
 @FunctionalInterface
 public interface Handler {
-  HttpResponse handle(HttpRequest request);
+  void handle(HttpRequest request, HttpResponse response);
 }

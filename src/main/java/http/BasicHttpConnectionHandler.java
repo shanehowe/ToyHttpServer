@@ -2,10 +2,12 @@ package http;
 
 import http.model.HttpRequest;
 import http.model.HttpResponse;
+import http.requestfilters.FilterChain;
 import http.router.HttpRouter;
 import http.writer.HttpResponseWriter;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,9 +33,11 @@ public class BasicHttpConnectionHandler implements ConnectionHandler {
       HttpResponseWriter httpResponseWriter = responseWriterProvider.provide(connection);
       do {
         HttpRequest request = requestParser.parseRequest();
+        HttpResponse response = HttpResponse.newBuilder().build();
 
         Handler handler = router.route(request.path());
-        HttpResponse response = handler.handle(request);
+        FilterChain filterChain = new FilterChain(List.of(), handler::handle);
+        filterChain.next(request, response);
 
         httpResponseWriter.writeResponse(response);
 
