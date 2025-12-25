@@ -1,6 +1,7 @@
 import http.BasicHttpConnectionHandler;
 import http.ConnectionHandler;
 import http.HttpRequestParserProvider;
+import http.HttpResponseWriterProvider;
 import http.HttpServer;
 import http.model.HttpResponse;
 import http.model.HttpStatusCode;
@@ -12,19 +13,17 @@ import java.util.concurrent.Executors;
 
 public class Main {
   public static void main(String[] args) throws IOException {
-    HttpRouter router =
-        new SimpleHttpRouter()
-            .addRoute(
-                "/",
-                request ->
-                    HttpResponse.newBuilder()
-                        .statusCode(HttpStatusCode.OK)
-                        .body("Hello, World!")
-                        .build());
+    HttpRouter router = new SimpleHttpRouter()
+        .addRoute(
+            "/",
+            request -> HttpResponse.newBuilder()
+                .statusCode(HttpStatusCode.OK)
+                .body("Hello, World!")
+                .build());
 
-    ExecutorService connectionPool = Executors.newFixedThreadPool(10);
-    ConnectionHandler connectionHandler =
-        new BasicHttpConnectionHandler(router, new HttpRequestParserProvider());
+    ExecutorService connectionPool = Executors.newFixedThreadPool(100);
+    ConnectionHandler connectionHandler = new BasicHttpConnectionHandler(router, new HttpRequestParserProvider(),
+        new HttpResponseWriterProvider());
 
     HttpServer server = new HttpServer(connectionHandler, connectionPool);
     server.start(8000);

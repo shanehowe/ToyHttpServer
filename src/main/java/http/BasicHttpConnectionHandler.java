@@ -7,13 +7,20 @@ import http.writer.HttpResponseWriter;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class BasicHttpConnectionHandler implements ConnectionHandler {
   private final HttpRouter router;
   private final HttpRequestParserProvider parserProvider;
+  private final HttpResponseWriterProvider responseWriterProvider;
+  private static final Logger logger = LogManager.getLogger(BasicHttpConnectionHandler.class);
 
-  public BasicHttpConnectionHandler(HttpRouter router, HttpRequestParserProvider parserProvider) {
+  public BasicHttpConnectionHandler(HttpRouter router, HttpRequestParserProvider parserProvider,
+      HttpResponseWriterProvider responseWriterProvider) {
     this.router = router;
     this.parserProvider = parserProvider;
+    this.responseWriterProvider = responseWriterProvider;
   }
 
   @Override
@@ -21,31 +28,23 @@ public class BasicHttpConnectionHandler implements ConnectionHandler {
     boolean keepAlive;
     try {
       HttpRequestParser requestParser = parserProvider.provide(connection);
-      HttpResponseWriter httpResponseWriter = new HttpResponseWriter(connection.getOutputStream());
+      HttpResponseWriter httpResponseWriter = responseWriterProvider.provide(connection);
       do {
         HttpRequest request = requestParser.parseRequest();
 
         Handler handler = router.route(request.path());
         HttpResponse response = handler.handle(request);
-        response.headers().add("Connection", keepAlive(request) ? "keep-alive" : "close");
-        response.headers().add("Content-Length", String.valueOf(response.body().length()));
 
         httpResponseWriter.writeResponse(response);
 
-        keepAlive = keepAlive(request);
+        keepAlive = request.keepAlive();
       } while (keepAlive);
 
       connection.close();
     } catch (IOException e) {
+      // TODO it will be better to write a respone with 500 status code here.
+      logger.error("failed to handle http request", e);
       throw new RuntimeException(e);
     }
-  }
-
-  private boolean keepAlive(HttpRequest request) {
-    String connectionHeader = request.headers().get("Connection");
-    if (connectionHeader != null) {
-      return connectionHeader.equalsIgnoreCase("keep-alive");
-    }
-    return request.version().equals("HTTP/1.1");
   }
 }
