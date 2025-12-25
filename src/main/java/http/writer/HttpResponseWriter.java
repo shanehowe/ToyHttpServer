@@ -16,14 +16,14 @@ public class HttpResponseWriter {
     writer.writeln(
         String.format(
             "%s %d %s",
-            "HTTP/1.1", response.statusCode().getCode(), response.statusCode().getStatusText()));
+            "HTTP/1.1", response.getStatusCode().getCode(), response.getStatusCode().getStatusText()));
 
-    for (Entry<String, String> entry : response.headers().entrySet()) {
+    for (Entry<String, String> entry : response.getHeaders().entrySet()) {
       writer.writeln(String.format("%s: %s", entry.getKey(), entry.getValue()));
     }
     writer.writeln();
-    if (!response.body().isEmpty()) {
-      writer.writeln(response.body());
+    if (!response.getBody().isEmpty()) {
+      writer.writeln(response.getBody());
     }
   }
 }
