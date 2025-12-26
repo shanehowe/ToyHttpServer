@@ -1,5 +1,6 @@
 package http;
 
+import http.handlers.Handler;
 import http.model.HttpRequest;
 import http.model.HttpResponse;
 import http.requestfilters.FilterChain;
@@ -40,7 +41,7 @@ public class BasicHttpConnectionHandler implements ConnectionHandler {
 
         Handler handler = router.route(request.path());
         FilterChain filterChain = new FilterChain(requestFilters, handler::handle);
-        filterChain.next(request, response);
+        filterChain.run(request, response);
 
         httpResponseWriter.writeResponse(response);
 

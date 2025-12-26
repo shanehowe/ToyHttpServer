@@ -1,4 +1,4 @@
-package http;
+package http.handlers;
 
 import http.model.HttpRequest;
 import http.model.HttpResponse;

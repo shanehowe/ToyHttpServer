@@ -1,6 +1,6 @@
 package http.router;
 
-import http.Handler;
+import http.handlers.Handler;
 import http.model.HttpStatusCode;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,10 @@ public class SimpleHttpRouter implements HttpRouter {
   @Override
   public Handler route(String path) {
     return routes.getOrDefault(
-        path, (request, response) -> response.setStatusCode(HttpStatusCode.NOT_FOUND));
+        path, (request, response) -> {
+          response.setStatusCode(HttpStatusCode.NOT_FOUND);
+          response.setBody("The requested resource cannot be located.");
+        });
   }
 
   public SimpleHttpRouter addRoute(String path, Handler handler) {

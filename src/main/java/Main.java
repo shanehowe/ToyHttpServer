@@ -17,6 +17,7 @@ import http.HttpServer;
 import http.model.HttpStatusCode;
 import http.requestfilters.DefaultHeadersFilter;
 import http.requestfilters.HeaderProviderFunction;
+import http.requestfilters.LoggingFilter;
 import http.requestfilters.RequestFilter;
 import http.router.HttpRouter;
 import http.router.SimpleHttpRouter;
@@ -50,7 +51,7 @@ public class Main {
       return Optional.of(rfcFormatted);
     });
 
-    List<RequestFilter> filters = List.of(new DefaultHeadersFilter(headersToApply));
+    List<RequestFilter> filters = List.of(new LoggingFilter(), new DefaultHeadersFilter(headersToApply));
     ExecutorService connectionPool = Executors.newFixedThreadPool(100);
 
     ConnectionHandler connectionHandler = new BasicHttpConnectionHandler(router, new HttpRequestParserProvider(),
