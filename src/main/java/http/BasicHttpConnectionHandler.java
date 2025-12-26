@@ -3,6 +3,7 @@ package http;
 import http.model.HttpRequest;
 import http.model.HttpResponse;
 import http.requestfilters.FilterChain;
+import http.requestfilters.RequestFilter;
 import http.router.HttpRouter;
 import http.writer.HttpResponseWriter;
 import java.io.IOException;
@@ -16,13 +17,15 @@ public class BasicHttpConnectionHandler implements ConnectionHandler {
   private final HttpRouter router;
   private final HttpRequestParserProvider parserProvider;
   private final HttpResponseWriterProvider responseWriterProvider;
+  private final List<RequestFilter> requestFilters;
   private static final Logger logger = LogManager.getLogger(BasicHttpConnectionHandler.class);
 
   public BasicHttpConnectionHandler(HttpRouter router, HttpRequestParserProvider parserProvider,
-      HttpResponseWriterProvider responseWriterProvider) {
+      HttpResponseWriterProvider responseWriterProvider, List<RequestFilter> requestFilters) {
     this.router = router;
     this.parserProvider = parserProvider;
     this.responseWriterProvider = responseWriterProvider;
+    this.requestFilters = requestFilters;
   }
 
   @Override
@@ -36,7 +39,7 @@ public class BasicHttpConnectionHandler implements ConnectionHandler {
         HttpResponse response = HttpResponse.newBuilder().build();
 
         Handler handler = router.route(request.path());
-        FilterChain filterChain = new FilterChain(List.of(), handler::handle);
+        FilterChain filterChain = new FilterChain(requestFilters, handler::handle);
         filterChain.next(request, response);
 
         httpResponseWriter.writeResponse(response);
