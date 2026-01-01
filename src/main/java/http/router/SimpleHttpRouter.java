@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SimpleHttpRouter implements HttpRouter {
-  Map<String, Handler> routes;
+  private final Map<String, Handler> routes;
 
   public SimpleHttpRouter(Map<String, Handler> routes) {
     this.routes = routes;
